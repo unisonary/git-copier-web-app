@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Git Copier</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background-color: #000000;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        
+        .header {
+            background-color: #111827;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 32px;
+            color: #ffffff;
+        }
+        
+        .card {
+            background-color: #1f2937;
+            border: 1px solid #374151;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .card h2 {
+            color: #ffffff;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            color: #d1d5db;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            background-color: #374151;
+            border: 1px solid #4b5563;
+            border-radius: 5px;
+            color: #ffffff;
+            font-size: 14px;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+        
+        .url-input {
+            min-width: 500px;
+        }
+        
+        .button-group {
+            margin-top: 20px;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .btn-primary {
+            background-color: #2563eb;
+            color: #ffffff;
+        }
+        
+        .btn-primary:hover {
+            background-color: #1d4ed8;
+        }
+        
+        .btn-secondary {
+            background-color: #374151;
+            color: #ffffff;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #4b5563;
+        }
+        
+        .btn-danger {
+            background-color: #dc2626;
+            color: #ffffff;
+        }
+        
+        .btn-danger:hover {
+            background-color: #b91c1c;
+        }
+        
+        .task-item {
+            background-color: #374151;
+            border: 1px solid #4b5563;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+        }
+        
+        .task-status {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-right: 10px;
+        }
+        
+        .task-status.pending {
+            background-color: #6b7280;
+            color: #ffffff;
+        }
+        
+        .task-status.running {
+            background-color: #1d4ed8;
+            color: #ffffff;
+        }
+        
+        .task-status.completed {
+            background-color: #059669;
+            color: #ffffff;
+        }
+        
+        .task-status.failed {
+            background-color: #dc2626;
+            color: #ffffff;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background-color: #4b5563;
+            border-radius: 5px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background-color: #3b82f6;
+            border-radius: 5px;
+            transition: width 0.3s ease;
+        }
+        
+        .loading-bar {
+            width: 100%;
+            height: 6px;
+            background: linear-gradient(90deg, #3b82f6, #60a5fa, #3b82f6);
+            background-size: 200% 100%;
+            animation: loading 2s infinite;
+            border-radius: 3px;
+            margin: 10px 0;
+        }
+        
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        
+        .console-window {
+            background-color: #000000;
+            border: 1px solid #4b5563;
+            color: #10b981;
+            font-family: monospace;
+            font-size: 13px;
+            border-radius: 5px;
+            padding: 15px;
+            height: 200px;
+            overflow-y: auto;
+        }
+        
+        .console-line {
+            margin-bottom: 5px;
+        }
+        
+        .console-timestamp {
+            color: #6b7280;
+            margin-right: 10px;
+        }
+        
+        .console-info { color: #60a5fa; }
+        .console-success { color: #10b981; }
+        .console-warning { color: #f59e0b; }
+        .console-error { color: #ef4444; }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        
+        .stat-item {
+            background-color: #111827;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #374151;
+        }
+        
+        .stat-number {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #9ca3af;
+            text-transform: uppercase;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #6b7280;
+        }
+        
+        .empty-state-text {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        
+        .clear-btn {
+            background: none;
+            border: none;
+            color: #9ca3af;
+            cursor: pointer;
+            font-size: 12px;
+            padding: 5px 10px;
+            border-radius: 3px;
+        }
+        
+        .clear-btn:hover {
+            color: #ffffff;
+            background-color: #374151;
+        }
+        
+        .task-header, .console-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .task-header h3, .console-header h3 {
+            margin: 0;
+        }
+        
+        .task-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+        
+        .task-info {
+            flex: 1;
+        }
+        
+        .task-urls {
+            margin: 10px 0;
+            font-size: 13px;
+        }
+        
+        .task-url {
+            color: #d1d5db;
+            margin-bottom: 5px;
+            word-break: break-all;
+        }
+        
+        .task-remove {
+            background: none;
+            border: none;
+            color: #ef4444;
+            cursor: pointer;
+            font-size: 20px;
+            padding: 5px;
+            border-radius: 3px;
+        }
+        
+        .task-remove:hover {
+            background-color: #7f1d1d;
+            color: #fca5a5;
+        }
+        
+        .console-stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .console-stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .task-content {
+                flex-direction: column;
+            }
+            
+            .task-remove {
+                margin-top: 10px;
+                align-self: flex-end;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <h1>Git Copier</h1>
+    </div>
+
+    <!-- Task Form -->
+    <div class="card">
+        <h2>Add Repository Copy Task</h2>
+        
+        <form id="addTaskForm">
+            <div class="form-group">
+                <label>Source Repository</label>
+                <input
+                    type="url"
+                    id="sourceUrl"
+                    name="sourceUrl"
+                    placeholder="https://github.com/user/source-repo.git"
+                    class="url-input"
+                    required
+                />
+            </div>
+            
+            <div class="form-group">
+                <label>Destination Repository</label>
+                <input
+                    type="url"
+                    id="destinationUrl"
+                    name="destinationUrl"
+                    placeholder="https://github.com/user/dest-repo.git"
+                    class="url-input"
+                    required
+                />
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div class="form-group">
+                    <label>Author Name</label>
+                    <input
+                        type="text"
+                        id="authorName"
+                        name="authorName"
+                        placeholder="unisonary"
+                        value="unisonary"
+                        required
+                    />
+                </div>
+                
+                <div class="form-group">
+                    <label>Author Email</label>
+                    <input
+                        type="email"
+                        id="authorEmail"
+                        name="authorEmail"
+                        placeholder="unisonary@outlook.com"
+                        value="unisonary@outlook.com"
+                        required
+                    />
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button type="submit" id="addTaskBtn" class="btn btn-primary">
+                    Add Task
+                </button>
+                <button type="button" id="startAllBtn" class="btn btn-secondary" onclick="startAllTasks()">
+                    Start All
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Task List -->
+    <div class="card">
+        <div class="task-header">
+            <h3>Task Queue</h3>
+            <button id="clearAllBtn" class="btn btn-danger" onclick="clearAllTasks()">
+                Clear All
+            </button>
+        </div>
+        
+        <div id="taskList">
+            <!-- Tasks will be added here -->
+        </div>
+    </div>
+
+    <!-- Console and Stats -->
+    <div class="console-stats-grid">
+        <!-- Console -->
+        <div class="card">
+            <div class="console-header">
+                <h3>Console</h3>
+                <button id="clearConsoleBtn" class="clear-btn" onclick="clearConsole()">
+                    Clear
+                </button>
+            </div>
+            
+            <div id="consoleWindow" class="console-window">
+                <div class="console-line">
+                    <span class="console-timestamp">[System]</span>
+                    <span class="console-info">Ready</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="card">
+            <h3>Status</h3>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number" style="color: #60a5fa;" id="totalTasks">0</div>
+                    <div class="stat-label">Total</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" style="color: #10b981;" id="completedTasks">0</div>
+                    <div class="stat-label">Completed</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" style="color: #f59e0b;" id="runningTasks">0</div>
+                    <div class="stat-label">Running</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" style="color: #ef4444;" id="failedTasks">0</div>
+                    <div class="stat-label">Failed</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cleanup -->
+    <div class="card">
+        <button id="cleanupBtn" class="btn btn-secondary" onclick="cleanupTempFiles()">
+            Clean Up Temp Files
+        </button>
+    </div>
+
+    <script>
+        // Task management
+        let tasks = [];
+        let isProcessing = false;
+
+        // Console functions
+        function addConsoleLine(message, type = 'info') {
+            const consoleWindow = document.getElementById('consoleWindow');
+            const timestamp = new Date().toLocaleTimeString();
+            const line = document.createElement('div');
+            line.className = 'console-line';
+            
+            let typeClass = 'console-info';
+            if (type === 'success') typeClass = 'console-success';
+            else if (type === 'warning') typeClass = 'console-warning';
+            else if (type === 'error') typeClass = 'console-error';
+            
+            line.innerHTML = `
+                <span class="console-timestamp">[${timestamp}]</span>
+                <span class="${typeClass}">${message}</span>
+            `;
+            
+            consoleWindow.appendChild(line);
+            consoleWindow.scrollTop = consoleWindow.scrollHeight;
+        }
+
+        function clearConsole() {
+            const consoleWindow = document.getElementById('consoleWindow');
+            consoleWindow.innerHTML = `
+                <div class="console-line">
+                    <span class="console-timestamp">[System]</span>
+                    <span class="console-info">Console cleared</span>
+                </div>
+            `;
+        }
+
+        // Task functions
+        function addTask(sourceUrl, destinationUrl, authorName, authorEmail) {
+            const task = {
+                id: Date.now(),
+                sourceUrl,
+                destinationUrl,
+                authorName,
+                authorEmail,
+                status: 'pending',
+                progress: 0,
+                result: null,
+                error: null
+            };
+            
+            tasks.push(task);
+            renderTaskList();
+            updateTaskStats();
+            addConsoleLine(`Task added: ${sourceUrl}`, 'info');
+        }
+
+        function renderTaskList() {
+            const taskList = document.getElementById('taskList');
+            if (tasks.length === 0) {
+                taskList.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-text">No tasks in queue</div>
+                        <div style="color: #9ca3af;">Add your first repository copy task above</div>
+                    </div>
+                `;
+                return;
+            }
+
+            taskList.innerHTML = tasks.map((task, index) => `
+                <div class="task-item">
+                    <div class="task-content">
+                        <div class="task-info">
+                            <div style="margin-bottom: 10px;">
+                                <span class="task-status ${task.status}">${task.status}</span>
+                                <span style="color: #6b7280; font-size: 12px;">#${index + 1}</span>
+                            </div>
+                            
+                            <div class="task-urls">
+                                <div class="task-url">${task.sourceUrl}</div>
+                                <div class="task-url">→ ${task.destinationUrl}</div>
+                            </div>
+                            
+                            ${task.status === 'running' ? `
+                                <div class="loading-bar"></div>
+                            ` : `
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: ${task.progress}%"></div>
+                                </div>
+                            `}
+                            
+                            ${task.result ? '<div style="color: #10b981; font-size: 13px; margin-top: 8px;">✅ Completed</div>' : ''}
+                            ${task.error ? `<div style="color: #ef4444; font-size: 13px; margin-top: 8px;">❌ ${task.error}</div>` : ''}
+                        </div>
+                        
+                        ${task.status === 'pending' ? `
+                            <button onclick="removeTask(${task.id})" class="task-remove">
+                                ×
+                            </button>
+                        ` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateTaskStats() {
+            const totalTasks = tasks.length;
+            const completedTasks = tasks.filter(t => t.status === 'completed').length;
+            const runningTasks = tasks.filter(t => t.status === 'running').length;
+            const failedTasks = tasks.filter(t => t.status === 'failed').length;
+
+            document.getElementById('totalTasks').textContent = totalTasks;
+            document.getElementById('completedTasks').textContent = completedTasks;
+            document.getElementById('runningTasks').textContent = runningTasks;
+            document.getElementById('failedTasks').textContent = failedTasks;
+        }
+
+        function removeTask(taskId) {
+            tasks = tasks.filter(t => t.id !== taskId);
+            renderTaskList();
+            updateTaskStats();
+            addConsoleLine('Task removed', 'info');
+        }
+
+        function clearAllTasks() {
+            if (isProcessing) {
+                alert('Cannot clear tasks while processing');
+                return;
+            }
+            
+            tasks = [];
+            renderTaskList();
+            updateTaskStats();
+            clearConsole();
+            addConsoleLine('All tasks cleared', 'info');
+        }
+
+        async function startAllTasks() {
+            if (isProcessing) {
+                alert('Already processing');
+                return;
+            }
+
+            if (tasks.length === 0) {
+                alert('No tasks to process');
+                return;
+            }
+
+            isProcessing = true;
+            addConsoleLine('Starting batch processing...', 'info');
+            
+            for (let i = 0; i < tasks.length; i++) {
+                if (tasks[i].status === 'pending') {
+                    await processTask(i);
+                }
+            }
+            
+            isProcessing = false;
+            addConsoleLine('All tasks completed', 'success');
+        }
+
+        async function processTask(index) {
+            const task = tasks[index];
+            if (task.status !== 'pending') return;
+
+            task.status = 'running';
+            task.progress = 0;
+            renderTaskList();
+            updateTaskStats();
+
+            addConsoleLine(`Processing task #${index + 1}`, 'info');
+
+            try {
+                const progressInterval = setInterval(() => {
+                    if (task.progress < 90) {
+                        task.progress += Math.random() * 10;
+                        renderTaskList();
+                    }
+                }, 500);
+
+                const response = await fetch('/api/copy-repository', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        sourceUrl: task.sourceUrl,
+                        destinationUrl: task.destinationUrl,
+                        authorName: task.authorName,
+                        authorEmail: task.authorEmail
+                    }),
+                });
+
+                clearInterval(progressInterval);
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    task.status = 'completed';
+                    task.progress = 100;
+                    task.result = result;
+                    addConsoleLine(`Task #${index + 1} completed`, 'success');
+                } else {
+                    task.status = 'failed';
+                    task.error = result.error || 'Failed';
+                    addConsoleLine(`Task #${index + 1} failed`, 'error');
+                }
+                
+            } catch (error) {
+                task.status = 'failed';
+                task.error = error.message || 'Network error';
+                addConsoleLine(`Task #${index + 1} failed`, 'error');
+            }
+
+            renderTaskList();
+            updateTaskStats();
+        }
+
+        // Form handler
+        document.getElementById('addTaskForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            addTask(
+                formData.get('sourceUrl'),
+                formData.get('destinationUrl'),
+                formData.get('authorName'),
+                formData.get('authorEmail')
+            );
+            
+            this.reset();
+            document.getElementById('authorName').value = 'unisonary';
+            document.getElementById('authorEmail').value = 'unisonary@outlook.com';
+        });
+
+        // Cleanup
+        async function cleanupTempFiles() {
+            const cleanupBtn = document.getElementById('cleanupBtn');
+            cleanupBtn.disabled = true;
+            cleanupBtn.textContent = 'Cleaning...';
+            
+            addConsoleLine('Cleanup requested...', 'info');
+            
+            try {
+                const response = await fetch('/api/cleanup', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    addConsoleLine(`Cleanup completed: ${result.result.message}`, 'success');
+                } else {
+                    addConsoleLine(`Cleanup failed: ${result.error}`, 'error');
+                }
+                
+            } catch (error) {
+                addConsoleLine(`Cleanup error: ${error.message}`, 'error');
+            } finally {
+                cleanupBtn.disabled = false;
+                cleanupBtn.textContent = 'Clean Up Temp Files';
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            renderTaskList();
+            updateTaskStats();
+        });
+    </script>
+</body>
+</html>

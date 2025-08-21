@@ -1,0 +1,59 @@
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Logs
+logs/
+*.log
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Environment files
+.env
+.env.*
+
+# Build output
+/dist/
+/build/
+
+# Vercel
+.vercel/
+
+# Temp files
+temp/
+
+# Misc
+*.swp
+*.swo
+
+# Ignore server-side temp files
+server/*.tmp
+
+# Ignore client-side temp files
+client/*.tmp
+
+# Ignore public temp files
+client/public/*.tmp
+
+# Ignore bat and shell script output
+*.bak
+*.out
+
+# Ignore coverage reports
+coverage/
+
+# Ignore IDE files
+.vscode/
+.idea/
+
+# Ignore package-lock
+package-lock.json
+yarn.lock
+
+# Ignore simple-app.html backup
+client/public/simple-app.html.bak
+node_modules

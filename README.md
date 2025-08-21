@@ -1,67 +1,78 @@
-# git-copier-web-app
+# Git Copier Web Application
 
-## Overview
-The Git Copier Web App is a full-stack application that allows users to copy Git repositories while rewriting commit history and modernizing branch names. It features a server built with Express and a client built with React.
+A clean, simple web application for copying Git repositories with author rewriting and branch modernization.
 
 ## Features
-- Clone Git repositories
-- Change commit authorship
-- Rename branches from `master` to `main`
-- User-friendly interface for repository operations
 
-## Project Structure
-```
-git-copier-web-app
-├── src
-│   ├── server
-│   │   ├── index.ts          # Entry point for the server application
-│   │   ├── controllers
-│   │   │   └── repoController.ts  # Handles repository-related requests
-│   │   ├── services
-│   │   │   └── gitService.ts      # Interacts with Git repositories
-│   │   ├── routes
-│   │   │   └── index.ts           # Sets up application routes
-│   │   └── types
-│   │       └── index.ts           # Defines request and response types
-│   └── client
-│       ├── index.tsx              # Entry point for the client application
-│       ├── components
-│       │   └── RepoForm.tsx       # Form for user input
-│       └── styles
-│           └── app.css            # CSS styles for the client application
-├── package.json                    # npm configuration file
-├── tsconfig.json                   # TypeScript configuration file
-├── .gitignore                      # Files and directories to ignore by Git
-└── README.md                       # Project documentation
-```
+- **Web Interface**: Simple HTML-based UI for easy repository copying
+- **Author Rewriting**: Change commit author information during copy
+- **Branch Modernization**: Automatically convert `master` branches to `main`
+- **Safe Operations**: Non-interactive, clean output, safe Git operations
 
-## Installation
-1. Clone the repository:
-   ```
-   git clone <repository-url>
-   ```
-2. Navigate to the project directory:
-   ```
-   cd git-copier-web-app
-   ```
-3. Install dependencies:
-   ```
+## Quick Start
+
+1. **Install Dependencies**:
+   ```bash
    npm install
    ```
 
-## Usage
-1. Start the server:
+2. **Start the Server**:
+   ```bash
+   npm start
    ```
-   npm run start:server
+   
+   Or use the batch file on Windows:
+   ```bash
+   start-server.bat
    ```
-2. Start the client:
-   ```
-   npm run start:client
-   ```
-3. Access the application in your browser at `http://localhost:3000`.
 
-## Contributing
-Contributions are welcome! Please open an issue or submit a pull request for any enhancements or bug fixes.
+3. **Open Your Browser**:
+   Navigate to `http://localhost:3000`
+
+## Project Structure
+
+```
+git-copier/
+├── server/                 # Backend server
+│   ├── index.js           # Express server
+│   └── gitService.js      # Git operations logic
+├── client/
+│   └── public/
+│       └── simple-app.html # Frontend UI
+├── package.json            # Dependencies
+├── start-server.bat        # Windows startup script
+├── vercel.json            # Vercel deployment config
+└── git-copier.sh          # Original bash script
+```
+
+## Usage
+
+1. Enter the source repository URL (HTTPS or SSH)
+2. Enter the destination repository URL
+3. Optionally specify new author name and email
+4. Click "Copy Repository" to start the process
+
+## Deployment
+
+The application is ready for deployment on:
+- **Vercel** (recommended) - Use the included `vercel.json`
+- **Heroku** - Add a `Procfile` with `web: node server/index.js`
+- **Railway** - Direct deployment from GitHub
+- **DigitalOcean App Platform** - Simple Node.js deployment
+
+## Development
+
+For development with auto-restart:
+```bash
+npm run dev
+```
+
+## Requirements
+
+- Node.js 16+ 
+- Git installed on the server
+- Internet access for repository cloning
 
 ## License
-This project is licensed under the MIT License.
+
+MIT License - see LICENSE file for details.
